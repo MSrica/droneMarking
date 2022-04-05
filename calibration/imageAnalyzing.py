@@ -6,37 +6,32 @@
 import cv2 as cv
 import numpy as np
 
-from cameraCalibration import NX
-from cameraCalibration import NY
-from cameraCalibration import SQUARE_SIZE
-from cameraCalibration import CRITERIA
-from cameraCalibration import SHRINK
-from cameraCalibration import IMAGES
+import constants
 
 # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0) * SQUARE SIZE
-objp = np.zeros((NX*NY, 3), np.float32)
-objp[:, :2] = np.mgrid[0:NX, 0:NY].T.reshape(-1, 2)
-objp = objp * SQUARE_SIZE
+objp = np.zeros((constants.NX*constants.NY, 3), np.float32)
+objp[:, :2] = np.mgrid[0:constants.NX, 0:constants.NY].T.reshape(-1, 2)
+objp = objp * constants.SQUARE_SIZE
 
 def getPoints():
     objpoints, imgpoints = ([] for i in range(2))
     
-    for imgName in IMAGES:
+    for imgName in constants.IMAGES:
         img = cv.imread(imgName)
         gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     
         # find the chess board corners
-        ret, corners = cv.findChessboardCorners(gray, (NX, NY), None)
+        ret, corners = cv.findChessboardCorners(gray, (constants.NX, constants.NY), None)
         
         # if found add object and image points
         if ret:
             objpoints.append(objp)
             imgpoints.append(corners)
-            cornersFound = cv.cornerSubPix(gray, corners, (11, 11), (-1, -1), CRITERIA)
+            cornersFound = cv.cornerSubPix(gray, corners, (11, 11), (-1, -1), constants.CRITERIA)
             
             # draw the corners and show image
-            cv.drawChessboardCorners(img, (NX, NY), cornersFound, True)
-            img = cv.resize(img, (0, 0), fx = SHRINK, fy = SHRINK)
+            cv.drawChessboardCorners(img, (constants.NX, constants.NY), cornersFound, True)
+            img = cv.resize(img, (0, 0), fx = constants.SHRINK, fy = constants.SHRINK)
             #cv.imshow(imgName, img)
         else:
             print("No pattern found on " + imgName)
@@ -58,6 +53,9 @@ def getCameraVlaues(objpoints, imgpoints):
         
         # get camera intrinsic and extrinsic parameters
         ret, mtx, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
-        print(mtx)
+        print("Camera matrix: {}".format(mtx))
+        print("Distortion matrix: {}".format(dist))
+        #print("Rotation matrix: {}".format(rvecs))
+        #print("Translation matrix: {}".format(tvecs))
         
         return mtx, dist, rvecs, tvecs

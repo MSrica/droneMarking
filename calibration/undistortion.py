@@ -5,6 +5,8 @@
 
 import cv2 as cv
 
+import constants
+
 
 def undistort(mtx, dist):
     # get random image
@@ -24,10 +26,10 @@ def undistort(mtx, dist):
     x, y, w, h = roi
     dst = dst[y:y+h, x:x+w]
     
-    from cameraCalibration import SHRINK
+    
     # shrink to desired size
-    dstSmall = cv.resize(dst, (0, 0), fx = SHRINK, fy = SHRINK)
-    imgSmall = cv.resize(img, (0, 0), fx = SHRINK, fy = SHRINK)
+    dstSmall = cv.resize(dst, (0, 0), fx = constants.SHRINK, fy = constants.SHRINK)
+    imgSmall = cv.resize(img, (0, 0), fx = constants.SHRINK, fy = constants.SHRINK)
     
     # show comparison between original and calibrated
     cv.imshow('Calibration result for viber_image_2022-03-27_19-11-37-526.jpg', dstSmall)
@@ -42,4 +44,4 @@ def getError(objpoints, imgpoints, mtx, dist, rvecs, tvecs):
         imgpoints2, _ = cv.projectPoints(objpoints[i], rvecs[i], tvecs[i], mtx, dist)
         error = cv.norm(imgpoints[i], imgpoints2, cv.NORM_L2)/len(imgpoints2)
         mean_error += error
-    print( "Total error: {}".format(mean_error/len(objpoints)))
+    print("Total error: {}".format(mean_error/len(objpoints)))
