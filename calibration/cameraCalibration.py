@@ -18,7 +18,7 @@ import savingToFile
 # can be commented, simply does 2e+2 -> 200
 np.set_printoptions(suppress=True)
 
-    
+
 
 def mainLoop():
     # objpoints - 3d point in real world space

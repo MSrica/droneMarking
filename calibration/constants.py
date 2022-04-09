@@ -18,7 +18,7 @@ SQUARE_SIZE = 0.015
 SHRINK = 0.5
 
 # directory of images
-IMAGES = glob.glob('a52s/*.jpg')
+IMAGES = glob.glob('ideapad_lenovo_gaming/*.jpg')
 
 # files
 VALUES_FOLDER = 'cameraValues'
