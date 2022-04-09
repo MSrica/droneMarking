@@ -3,15 +3,17 @@
 @author: srica
 """
 
+# libraries
 import cv2
 import math
 
+# needed when better camera is connected (intel camera)
 # camera and window resolution
-# USB 2.1 						USB 3.0
-CAMERA_CAPTURE_RESOLUTION_X = 1280	# 1920
-CAMERA_CAPTURE_RESOLUTION_Y = 720	# 1080
-CAMERA_CAPTURE_FPS = 15 			# 30
-WINDOW_WIDTH = 800
+# USB 2.1 						    USB 3.0
+#CAMERA_CAPTURE_RESOLUTION_X = 1280	# 1920
+#CAMERA_CAPTURE_RESOLUTION_Y = 720	# 1080
+#CAMERA_CAPTURE_FPS = 15 			# 30
+#WINDOW_WIDTH = 800
 
 # marker types, lengths and values
 ARUCO_TYPE = cv2.aruco.DICT_4X4_1000 # not working for me in spyder
@@ -31,3 +33,6 @@ BORDER_CIRCLE_RADIUS = 5
 # camera matrices, temporary until merge
 A52S_CAMERA_MATRIX = [[1208.15, 0.00, 805.49], [0.00, 1197.12, 577.64], [0.00, 0.00, 1.00]]
 A52S_DISTORTION_MATRIX = [[0.31, -2.38, 0.01, 0.00, 6.30]]
+
+LIG_CAMERA_MATRIX = [[934.80844951, 0., 613.48742158], [0., 937.49141917, 341.08229715], [0., 0., 1.]]
+LIG_DISTORTION_MATRIX = [[-0.19224202,  0.88974379, -0.01597694, -0.00681631, -1.46013914]]

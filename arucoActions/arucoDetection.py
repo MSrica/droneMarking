@@ -4,88 +4,67 @@
 @author: srica
 """
 
+# libraries
 import cv2 as cv
-import numpy as np
 
+# files
+import opencvFunctions
 import markerDetection
-import constants
+import calculations
 
-
+# global variables
 looping = True
 
-
-
-# TODO dynamic when branch is merged with cameraCalibration, hardcoded for now
-def getCameraValues():
-    return np.array(constants.A52S_CAMERA_MATRIX), np.array(constants.A52S_DISTORTION_MATRIX)
-
-def showWindow(frame):
-    cv.imshow('Marker detection', frame)
-
-    if cv.waitKey(30) == ord('q'):
-        return False
-
-    return True
-
-def drawMarker(image, markerID, aMarker):   
-    cv.circle(image, (aMarker[4], aMarker[5]), constants.CIRCLE_RADIUS, (0, 0, 255), constants.CIRCLE_WIDTH)
-
-def getMarkerCoordinates(aCorner):
-    (topLeft, topRight, bottomRight, bottomLeft) = aCorner
-    topRight = (int(topRight[0]), int(topRight[1]))
-    bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
-    bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
-    topLeft = (int(topLeft[0]), int(topLeft[1]))
-
-    centerX = int((topLeft[0] + bottomRight[0]) / 2.0)
-    centerY = int((topLeft[1] + bottomRight[1]) / 2.0)
-
-    return topLeft, topRight, bottomRight, bottomLeft, centerX, centerY
-
+# main program
 def mainLoop():
+    # program looping or not
     global looping
 
-    cap = cv.VideoCapture(0)
-    if not cap.isOpened():
-        print("Cannot open camera")
+    # opening communication with camera
+    cap, ret = opencvFunctions.communicateWithCamera()
+    if not ret:
         exit()
         
+    # main part of program
     while looping:
-        ret, frame = cap.read()
-        if not ret:
+        # getting frame from camera
+        looping, frame = cap.read()
+        if not looping:
             print("Can't receive frame. Exiting ...")
             break
         
-        # image processing
+        # TODO image processing
         #gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         
-        cameraMatrix, cameraDistortionCoefficients = getCameraValues()
+        # getting camera values
+        cameraMatrix, cameraDistortionCoefficients = opencvFunctions.getCameraValues()
+        # finding all markers in image
         aCorner, ids, rotationVectors, translationVectors = markerDetection.findArucoMarkers(frame, cameraMatrix, cameraDistortionCoefficients)
         
         # if no corners found, loop back
         if not len(aCorner):
-            looping = showWindow(frame)
+            looping = opencvFunctions.showWindow(frame)
             continue
         
-        ids = ids.flatten()     # ([[1,2], [3,4]]) -> ([1, 2, 3, 4])
-
-        zipped = zip(aCorner, ids, rotationVectors, translationVectors)
-        zipped = list(zipped)
-        zippedSorted = sorted(zipped, key = lambda x: x[1])
+        # sorting data from all markers
+        zippedSorted = calculations.sortMarkers(aCorner, ids, rotationVectors, translationVectors)
         
         # passing trough all markers
         for (markerCorner, markerID, rotationVector, translationVector) in zippedSorted:
-            aCorner = markerCorner.reshape((4, 2))   # matrix to 4 pairs
-            aMarker = getMarkerCoordinates(aCorner)  # all points of marker - topLeft, topRight, bottomRight, bottomLeft, centerX, centerY
+            # getting all coordinates of a marker - topLeft, topRight, bottomRight, bottomLeft, centerX, centerY
+            aCorner = markerCorner.reshape((4, 2))
+            aMarker = calculations.getMarkerCoordinates(aCorner)
             
-            drawMarker(frame, markerID, aMarker)     # drawing centers of all markers
-            cv.aruco.drawAxis(frame, cameraMatrix, cameraDistortionCoefficients, rotationVector, translationVector, constants.MARKER_ORIENTATION_LENGTH)
+            # drawing out markers
+            opencvFunctions.drawMarker(frame, markerID, aMarker, cameraMatrix, cameraDistortionCoefficients, rotationVector, translationVector)
 
-        looping = showWindow(frame)
+        # showing screen and checking for looping conditional
+        looping = opencvFunctions.showWindow(frame)
         
-    # When everything done, release the capture
+    # when everything done, release the capture
     cap.release()
     cv.destroyAllWindows()
 
+# cal mainLoop when file is run
 if __name__ == '__main__':
     mainLoop()

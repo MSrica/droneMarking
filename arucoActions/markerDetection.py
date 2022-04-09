@@ -3,8 +3,10 @@
 @author: srica
 """
 
+# libraries
 import cv2
 
+# files
 import constants
 
 # finding markers in image
@@ -13,4 +15,5 @@ def findArucoMarkers(image, cameraMatrix, cameraDistortionCoefficients):
 	arucoParameters = cv2.aruco.DetectorParameters_create()
 	(markerCorners, ids, _) = cv2.aruco.detectMarkers(image, arucoDictionary, parameters=arucoParameters)
 	rotationVectors, translationVectors, _ = cv2.aruco.estimatePoseSingleMarkers(markerCorners, constants.MARKER_SIDE_LENGTH, cameraMatrix, cameraDistortionCoefficients)
+	
 	return markerCorners, ids, rotationVectors, translationVectors
