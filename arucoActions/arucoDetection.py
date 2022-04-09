@@ -15,7 +15,7 @@ looping = True
 
 
 
-# TODO when branch is merged with calibration, hardcoded for now
+# TODO dynamic when branch is merged with cameraCalibration, hardcoded for now
 def getCameraValues():
     return np.array(constants.A52S_CAMERA_MATRIX), np.array(constants.A52S_DISTORTION_MATRIX)
 
@@ -66,13 +66,13 @@ def mainLoop():
         if not len(aCorner):
             looping = showWindow(frame)
             continue
-
+        
         ids = ids.flatten()     # ([[1,2], [3,4]]) -> ([1, 2, 3, 4])
 
         zipped = zip(aCorner, ids, rotationVectors, translationVectors)
         zipped = list(zipped)
         zippedSorted = sorted(zipped, key = lambda x: x[1])
-
+        
         # passing trough all markers
         for (markerCorner, markerID, rotationVector, translationVector) in zippedSorted:
             aCorner = markerCorner.reshape((4, 2))   # matrix to 4 pairs

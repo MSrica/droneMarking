@@ -14,7 +14,7 @@ CAMERA_CAPTURE_FPS = 15 			# 30
 WINDOW_WIDTH = 800
 
 # marker types, lengths and values
-ARUCO_TYPE = cv2.aruco.DICT_4X4_1000
+ARUCO_TYPE = cv2.aruco.DICT_4X4_1000 # not working for me in spyder
 MARKER_SIDE_LENGTH = 0.097
 MARKER_DIAGONAL_LENGTH = math.sqrt((MARKER_SIDE_LENGTH ** 2) * 2) * 100
 MARKER_ORIENTATION_LENGTH = 0.1
