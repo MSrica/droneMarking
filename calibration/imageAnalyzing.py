@@ -59,8 +59,6 @@ def getCameraValues(objpoints, imgpoints):
         return ret, oldMtx, dist, rvecs, tvecs, reprojectionError
 
     h,  w = img.shape[:2]
-    print(h)
-    print(w)
     mtx, roi = cv.getOptimalNewCameraMatrix(oldMtx, dist, (w, h), 1, (w, h))
     dst = cv.undistort(img, oldMtx, dist, None, mtx)
 

@@ -24,7 +24,7 @@ IMAGES = glob.glob('calibration/a52sSamples/*.jpg')
 EXAMPLE_IMAGE = f'calibration/a52sSamples/{random.randint(1, 19)}.jpg'
 
 # files
-VALUES_FOLDER = 'cameraValues/'
+VALUES_FOLDER = 'calibration/cameraValues/'
 FILE_EXTENSION = '.txt'
 
 CAMERA_MATRIX_FILE = VALUES_FOLDER + 'cameraMatrix' + FILE_EXTENSION
