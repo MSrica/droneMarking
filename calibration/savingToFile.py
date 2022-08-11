@@ -8,40 +8,21 @@ import os
 
 import constants
 
-def saveToFile(mtx, dist, rvecs, tvecs):
-    if not os.path.exists(constants.VALUES_FOLDER):
-      os.makedirs(constants.VALUES_FOLDER)
-    
-    # to txt   
-    with open(constants.CAMERA_MATRIX_FILE, 'w+') as f:
-        for line in mtx:
-            np.savetxt(f, line, fmt='%.2f')
-            
-    with open(constants.DISTORTION_MATRIX_FILE, 'w+') as f:
-        for line in dist:
-            np.savetxt(f, line, fmt='%.2f')
-            
-    with open(constants.ROTATION_VECTORS_FILE, 'w+') as f:
-        for line in rvecs:
-            np.savetxt(f, line, fmt='%.2f')
-            
-    with open(constants.TRANSLATION_VECTORS_FILE, 'w+') as f:
-        for line in tvecs:
-            np.savetxt(f, line, fmt='%.2f')
-            
-    
-# =============================================================================
-#     # to csv
-#     import pandas as pd
-#     df = pd.DataFrame(data=mtx.astype(float))
-#     df.to_csv(constants.CAMERA_MATRIX_FILE, sep=' ', header=False, float_format='%.2f', index=False)
-#     
-#     df = pd.DataFrame(data=dist.astype(float))
-#     df.to_csv(constants.DISTORTION_MATRIX_FILE, sep=' ', header=False, float_format='%.2f', index=False)
-#     
-#     df = pd.DataFrame(data=rvecs.astype(float))
-#     df.to_csv(constants.ROTATION_VECTORS_FILE, sep=' ', header=False, float_format='%.2f', index=False)
-#     
-#     df = pd.DataFrame(data=tvecs.astype(float))
-#     df.to_csv(constants.TRANSLATION_VECTORS_FILE, sep=' ', header=False, float_format='%.2f', index=False)
-# =============================================================================
+def writeArrayToFile(fileName, values):
+  with open(fileName, 'w+') as f:
+      for line in values:
+          np.savetxt(f, line, fmt='%.2f')
+
+def writeValueToFile(fileName, value):
+  with open(fileName, 'w+') as f:
+    f.write(str(value))
+
+def saveToFiles(mtx, dist, rvecs, tvecs, reprojectionError):
+  if not os.path.exists(constants.VALUES_FOLDER):
+    os.makedirs(constants.VALUES_FOLDER)
+  
+  writeArrayToFile(constants.CAMERA_MATRIX_FILE, mtx)  
+  writeArrayToFile(constants.DISTORTION_MATRIX_FILE, dist)  
+  writeArrayToFile(constants.ROTATION_VECTORS_FILE, rvecs)  
+  writeArrayToFile(constants.TRANSLATION_VECTORS_FILE, tvecs)  
+  writeValueToFile(constants.REPROJECTION_ERROR_FILE, reprojectionError)
