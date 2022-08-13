@@ -22,8 +22,7 @@ def mainLoop():
 
     # opening communication with camera
     cap, ret = opencvFunctions.communicateWithCamera()
-    if not ret:
-        exit()
+    if not ret: exit()
         
     # main part of program
     while looping:
@@ -32,9 +31,6 @@ def mainLoop():
         if not looping:
             print("Can't receive frame. Exiting ...")
             break
-        
-        # TODO image processing
-        #gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         
         # getting camera values
         cameraMatrix, cameraDistortionCoefficients = opencvFunctions.getCameraValues()
@@ -50,13 +46,13 @@ def mainLoop():
         zippedSorted = calculations.sortMarkers(aCorner, ids, rotationVectors, translationVectors)
         
         # passing trough all markers
-        for (markerCorner, markerID, rotationVector, translationVector) in zippedSorted:
+        for (markerCorner, _, rotationVector, translationVector) in zippedSorted:
             # getting all coordinates of a marker - topLeft, topRight, bottomRight, bottomLeft, centerX, centerY
             aCorner = markerCorner.reshape((4, 2))
             aMarker = calculations.getMarkerCoordinates(aCorner)
             
             # drawing out markers
-            opencvFunctions.drawMarker(frame, markerID, aMarker, cameraMatrix, cameraDistortionCoefficients, rotationVector, translationVector)
+            opencvFunctions.drawMarker(frame, aMarker, cameraMatrix, cameraDistortionCoefficients, rotationVector, translationVector)
 
         # showing screen and checking for looping conditional
         looping = opencvFunctions.showWindow(frame)

@@ -16,23 +16,21 @@ import math
 #WINDOW_WIDTH = 800
 
 # marker types, lengths and values
-ARUCO_TYPE = cv2.aruco.DICT_4X4_1000 # not working for me in spyder
-MARKER_SIDE_LENGTH = 0.097
+ARUCO_TYPE = cv2.aruco.DICT_4X4_1000
+MARKER_SIDE_LENGTH = 0.098
 MARKER_DIAGONAL_LENGTH = math.sqrt((MARKER_SIDE_LENGTH ** 2) * 2) * 100
-MARKER_ORIENTATION_LENGTH = 0.1
+MARKER_ORIENTATION_LENGTH = MARKER_SIDE_LENGTH / 2
 
 MEASURING_MARKER_ID = 0
 
 # drawing values
+SHRINK = 0.5
 LINE_WIDTH = 2
 CIRCLE_WIDTH = -1
 CIRCLE_RADIUS = 4
 BORDER_CIRCLE_WIDTH = 2
 BORDER_CIRCLE_RADIUS = 5
 
-# camera matrices, temporary until merge
-A52S_CAMERA_MATRIX = [[1208.15, 0.00, 805.49], [0.00, 1197.12, 577.64], [0.00, 0.00, 1.00]]
-A52S_DISTORTION_MATRIX = [[0.31, -2.38, 0.01, 0.00, 6.30]]
-
-LIG_CAMERA_MATRIX = [[934.80844951, 0., 613.48742158], [0., 937.49141917, 341.08229715], [0., 0., 1.]]
-LIG_DISTORTION_MATRIX = [[-0.19224202,  0.88974379, -0.01597694, -0.00681631, -1.46013914]]
+# camera matrices
+CAMERA_MATRIX_FILE = 'calibration/cameraValues/cameraMatrix.txt'
+DISTORTION_MATRIX_FILE = 'calibration/cameraValues/distortionMatrix.txt'
