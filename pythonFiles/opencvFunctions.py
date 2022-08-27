@@ -4,7 +4,6 @@
 """
 
 # libraries
-import os
 import cv2 as cv
 import numpy as np
 
@@ -43,8 +42,20 @@ def showWindow(frame):
     return True
 
 # drawing marker center and axes
-def drawMarker(image, aMarker, cameraMatrix, cameraDistortionCoefficients, rotationVector, translationVector):   
+def drawMarker(image, id, aMarker, cameraMatrix, cameraDistortionCoefficients, rotationVector, translationVector, corners):   
     # drawing marker center
-    cv.circle(image, (aMarker[4], aMarker[5]), constants.CIRCLE_RADIUS, (0, 0, 255), constants.CIRCLE_WIDTH)
+    cv.circle(image, (aMarker[4], aMarker[5]), constants.CIRCLE_RADIUS, constants.RED, constants.CIRCLE_WIDTH)
+    
     # drawing orientation axes of a marker
     cv.aruco.drawAxis(image, cameraMatrix, cameraDistortionCoefficients, rotationVector, translationVector, constants.MARKER_ORIENTATION_LENGTH)
+
+    # line below replaces manual drawing
+    #cv.aruco.drawDetectedMarkers(image, corners) 
+    cv.line(image, aMarker[3], aMarker[0], constants.GREEN, constants.LINE_WIDTH)
+    cv.line(image, aMarker[0], aMarker[1], constants.GREEN, constants.LINE_WIDTH)
+    cv.line(image, aMarker[1], aMarker[2], constants.GREEN, constants.LINE_WIDTH)
+    cv.line(image, aMarker[2], aMarker[3], constants.GREEN, constants.LINE_WIDTH)
+
+    cv.circle(image, (aMarker[0][0], aMarker[0][1]), constants.CIRCLE_RADIUS, constants.RED, constants.CIRCLE_WIDTH)
+
+    cv.putText(image, str(id), (aMarker[0][0], aMarker[0][1] - 10), constants.FONT, constants.FONT_SCALE, constants.RED, constants.LINE_WIDTH)

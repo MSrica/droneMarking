@@ -36,24 +36,24 @@ def mainLoop():
         # getting camera values
         cameraMatrix, cameraDistortionCoefficients = opencvFunctions.getCameraValues()
         # finding all markers in image
-        aCorner, ids, rotationVectors, translationVectors = markerDetection.findArucoMarkers(frame, cameraMatrix, cameraDistortionCoefficients)
+        corners, ids, rotationVectors, translationVectors = markerDetection.findArucoMarkers(frame, cameraMatrix, cameraDistortionCoefficients)
         
         # if no corners found, loop back
-        if not len(aCorner):
+        if not len(corners):
             looping = opencvFunctions.showWindow(frame)
             continue
         
         # sorting data from all markers
-        zippedSorted = calculations.sortMarkers(aCorner, ids, rotationVectors, translationVectors)
+        zippedSorted = calculations.sortMarkers(corners, ids, rotationVectors, translationVectors)
         
         # passing trough all markers
-        for (markerCorner, _, rotationVector, translationVector) in zippedSorted:
+        for (markerCorner, id, rotationVector, translationVector) in zippedSorted:
             # getting all coordinates of a marker - topLeft, topRight, bottomRight, bottomLeft, centerX, centerY
             aCorner = markerCorner.reshape((4, 2))
             aMarker = calculations.getMarkerCoordinates(aCorner)
             
             # drawing out markers
-            opencvFunctions.drawMarker(frame, aMarker, cameraMatrix, cameraDistortionCoefficients, rotationVector, translationVector)
+            opencvFunctions.drawMarker(frame, id, aMarker, cameraMatrix, cameraDistortionCoefficients, rotationVector, translationVector, corners)
 
         # showing screen and checking for looping conditional
         looping = opencvFunctions.showWindow(frame)

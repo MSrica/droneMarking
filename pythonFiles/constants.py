@@ -18,8 +18,8 @@ import random
 #CAMERA_CAPTURE_FPS = 15 			# 30
 #WINDOW_WIDTH = 800
 
-CAMERA_SOURCE = 0
-#CAMERA_SOURCE = 'http://192.168.0.186:8080/video'
+#CAMERA_SOURCE = 0
+CAMERA_SOURCE = 'http://192.168.5.12:8080/video'
 
 # marker types, lengths and values
 ARUCO_TYPE = cv2.aruco.DICT_4X4_1000
@@ -36,9 +36,13 @@ CIRCLE_WIDTH = -1
 CIRCLE_RADIUS = 4
 BORDER_CIRCLE_WIDTH = 2
 BORDER_CIRCLE_RADIUS = 5
+FONT = cv2.FONT_HERSHEY_SIMPLEX
+FONT_SCALE = 1
+GREEN = (0, 255, 0)
+RED = (0, 0, 255)
 
 # directory settings
-CURRENT_DIRECTORY = os.getcwd()
+CURRENT_DIRECTORY = os.path.dirname(os.getcwd())
 DEVICE_NAME = 'A52S'
 SAMPLE_IMAGES = CURRENT_DIRECTORY + '\\samples\\' + DEVICE_NAME + '\\'
 NR_OF_IMAGES = random.randint(1, 19)

@@ -4,7 +4,7 @@
 """
 
 def getMarkerCoordinates(aCorner):
-    (topLeft, topRight, bottomRight, bottomLeft) = aCorner
+    topLeft, topRight, bottomRight, bottomLeft = aCorner
     topRight = (int(topRight[0]), int(topRight[1]))
     bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
     bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
