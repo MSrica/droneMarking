@@ -19,7 +19,7 @@ import random
 #WINDOW_WIDTH = 800
 
 #CAMERA_SOURCE = 0
-CAMERA_SOURCE = 'http://192.168.5.12:8080/video'
+CAMERA_SOURCE = 'http://192.168.5.15:8080/video'
 
 # marker types, lengths and values
 ARUCO_TYPE = cv2.aruco.DICT_4X4_1000
@@ -28,6 +28,8 @@ MARKER_DIAGONAL_LENGTH = math.sqrt((MARKER_SIDE_LENGTH ** 2) * 2) * 100
 MARKER_ORIENTATION_LENGTH = MARKER_SIDE_LENGTH / 2
 
 MEASURING_MARKER_ID = 0
+CLOSED_CIRCUIT = False
+PIXEL_DIFFERENCE = 5
 
 # drawing values
 SHRINK = 0.5
@@ -40,9 +42,12 @@ FONT = cv2.FONT_HERSHEY_SIMPLEX
 FONT_SCALE = 1
 GREEN = (0, 255, 0)
 RED = (0, 0, 255)
+BLUE = (255, 0, 0)
+WHITE = (255, 255, 255)
 
 # directory settings
-CURRENT_DIRECTORY = os.path.dirname(os.getcwd())
+#CURRENT_DIRECTORY = os.path.dirname(os.getcwd())
+CURRENT_DIRECTORY = os.getcwd()
 DEVICE_NAME = 'A52S'
 SAMPLE_IMAGES = CURRENT_DIRECTORY + '\\samples\\' + DEVICE_NAME + '\\'
 NR_OF_IMAGES = random.randint(1, 19)
