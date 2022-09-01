@@ -22,6 +22,7 @@ def mainLoop():
     # program looping or not
     global looping
     followingPoints = []
+    measuringMarkerInsideLimits = False
 
     # opening communication with camera
     cap, ret = opencvFunctions.communicateWithCamera()
@@ -34,7 +35,9 @@ def mainLoop():
         if not looping:
             print("Can't receive frame. Exiting ...")
             return False
-        
+
+        if not measuringMarkerInsideLimits: opencvFunctions.drawCenterMeasuringCircle(frame)
+            
         # getting camera values
         cameraMatrix, cameraDistortionCoefficients = opencvFunctions.getCameraValues()
         # finding all markers in image
@@ -50,16 +53,22 @@ def mainLoop():
         
         # passing trough all markers
         for (markerCorner, id, rotationVector, translationVector) in zippedSorted:
+            if id != constants.MEASURING_MARKER_ID and not measuringMarkerInsideLimits: continue
+
             # getting all coordinates of a marker - topLeft, topRight, bottomRight, bottomLeft, centerX, centerY
             aCorner = markerCorner.reshape((4, 2))
             aMarker = calculations.getMarkerCoordinates(aCorner)
 
+            # drawing out markers
+            opencvFunctions.drawMarker(frame, id, aMarker, cameraMatrix, cameraDistortionCoefficients, rotationVector, translationVector, corners)
+
+            if not measuringMarkerInsideLimits:
+                measuringMarkerInsideLimits = calculations.checkMeasuringMarkerPosition(frame, aMarker[4])
+                if not measuringMarkerInsideLimits: break
+
             if id == 0 and (len(followingPoints) == 0 or (abs(aMarker[4][0] - followingPoints[-1][0][0]) > constants.PIXEL_DIFFERENCE or abs(aMarker[4][1] - followingPoints[-1][0][1]) > constants.PIXEL_DIFFERENCE)):
                 followingPoints.append([aMarker[4]]) # polylines
                 #followingPoints.append((aMarker[4], aMarker[5])) # contours
-
-            # drawing out markers
-            opencvFunctions.drawMarker(frame, id, aMarker, cameraMatrix, cameraDistortionCoefficients, rotationVector, translationVector, corners)
 
         # showing screen and checking for looping conditional
         looping = opencvFunctions.showWindow(frame, followingPoints)

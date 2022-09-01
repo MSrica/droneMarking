@@ -3,6 +3,8 @@
 @author: srica
 """
 
+import constants
+
 def getMarkerCoordinates(aCorner):
     topLeft, topRight, bottomRight, bottomLeft = aCorner
 
@@ -23,6 +25,17 @@ def getMarkerCoordinates(aCorner):
 
     return topLeft, topRight, bottomRight, bottomLeft, center
 
+def getWindowCenterCircleCoordinates(frame):
+	circleCenterX = (int)((frame.shape[1]-1) / 2)
+	circleCenterY = (int)((frame.shape[0]-1) / 2)
+
+	return circleCenterX, circleCenterY, constants.CENTER_CIRCLE_RADIUS
+
+def checkMeasuringMarkerPosition(frame, center):
+    circleCenterX, circleCenterY, radius = getWindowCenterCircleCoordinates(frame)
+    if (circleCenterX < center[0] + radius and circleCenterX > center[0] - radius) and (circleCenterY < center[1] + radius and circleCenterY > center[1] - radius): 
+        return True
+    return False
 
 def sortMarkers(aCorner, ids, rotationVectors, translationVectors):
     ids = ids.flatten()     # ([[1,2], [3,4]]) -> ([1, 2, 3, 4])

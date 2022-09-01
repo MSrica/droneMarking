@@ -9,6 +9,7 @@ import numpy as np
 
 # files
 import constants
+import calculations
 
 # opening communication with camera
 def communicateWithCamera():
@@ -31,6 +32,10 @@ def getCameraValues():
 
     return cameraMatrix, distortionMatrix
 
+def drawCenterMeasuringCircle(frame):
+	circleCenterX, circleCenterY, radius = calculations.getWindowCenterCircleCoordinates(frame)
+	cv.circle(frame, (circleCenterX, circleCenterY), radius, constants.RED, constants.BORDER_CIRCLE_WIDTH)
+
 # showing window and checking for exit
 def showWindow(frame, followingPoints):
     if len(followingPoints) > 0:
@@ -38,7 +43,6 @@ def showWindow(frame, followingPoints):
 
     frameSmall = cv.resize(frame, (0, 0), fx=constants.SHRINK, fy=constants.SHRINK)
     cv.imshow('Marker detection', frameSmall)
-
 
     if cv.waitKey(10) == ord('q'):
         return False
