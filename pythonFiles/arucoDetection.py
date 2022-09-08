@@ -14,15 +14,11 @@ import opencvFunctions
 import markerDetection
 import cameraCalibration
 
-# global variables
-looping = True
 
 # main program
 def mainLoop():
-    # program looping or not
-    global looping
     followingPoints = []
-    measuringMarkerInsideLimits = False
+    looping = True
 
     # opening communication with camera
     cap, ret = opencvFunctions.communicateWithCamera()
@@ -36,7 +32,7 @@ def mainLoop():
             print("Can't receive frame. Exiting ...")
             return False
 
-        if not measuringMarkerInsideLimits: opencvFunctions.drawCenterMeasuringCircle(frame)
+        if not constants.measuringMarkerInsideLimits: opencvFunctions.drawCenterMeasuringCircle(frame)
             
         # getting camera values
         cameraMatrix, cameraDistortionCoefficients = opencvFunctions.getCameraValues()
@@ -53,7 +49,8 @@ def mainLoop():
         
         # passing trough all markers
         for (markerCorner, id, rotationVector, translationVector) in zippedSorted:
-            if id != constants.MEASURING_MARKER_ID and not measuringMarkerInsideLimits: continue
+            if id != constants.MEASURING_MARKER_ID:# and not measuringMarkerInsideLimits: continue
+                continue
 
             # getting all coordinates of a marker - topLeft, topRight, bottomRight, bottomLeft, centerX, centerY
             aCorner = markerCorner.reshape((4, 2))
@@ -62,9 +59,13 @@ def mainLoop():
             # drawing out markers
             opencvFunctions.drawMarker(frame, id, aMarker, cameraMatrix, cameraDistortionCoefficients, rotationVector, translationVector, corners)
 
-            if not measuringMarkerInsideLimits:
-                measuringMarkerInsideLimits = calculations.checkMeasuringMarkerPosition(frame, aMarker[4])
-                if not measuringMarkerInsideLimits: break
+            if not constants.measuringMarkerInsideLimits:
+                constants.measuringMarkerInsideLimits = calculations.checkMeasuringMarkerPosition(frame, aMarker[4])
+                if not constants.measuringMarkerInsideLimits: break
+
+            if constants.centimeterToPixelRatio == 0:
+                calibrationMarkerDiagonalPixels = calculations.getDistanceBetweenTwoPoints(aMarker[0], aMarker[2])
+                constants.centimeterToPixelRatio = constants.MARKER_DIAGONAL_LENGTH / calibrationMarkerDiagonalPixels
 
             if id == 0 and (len(followingPoints) == 0 or (abs(aMarker[4][0] - followingPoints[-1][0][0]) > constants.PIXEL_DIFFERENCE or abs(aMarker[4][1] - followingPoints[-1][0][1]) > constants.PIXEL_DIFFERENCE)):
                 followingPoints.append([aMarker[4]]) # polylines

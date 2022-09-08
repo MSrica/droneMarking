@@ -23,12 +23,13 @@ CAMERA_SOURCE = 'http://192.168.5.13:8080/video'
 
 # marker types, lengths and values
 ARUCO_TYPE = cv2.aruco.DICT_4X4_1000
-MARKER_SIDE_LENGTH = 0.03
+MARKER_SIDE_LENGTH = 0.03 # CM
 MARKER_DIAGONAL_LENGTH = math.sqrt((MARKER_SIDE_LENGTH ** 2) * 2) * 100
 MARKER_ORIENTATION_LENGTH = MARKER_SIDE_LENGTH / 2
+TELLO_MINIMUM_DISTANCE = 20 # cm
 
 MEASURING_MARKER_ID = 0
-CLOSED_CIRCUIT = False
+CLOSED_CIRCUIT = True
 PIXEL_DIFFERENCE = 5
 
 # drawing values
@@ -77,3 +78,10 @@ DISTORTION_MATRIX_FILE = VALUES_FOLDER + 'distortionMatrix' + FILE_EXTENSION
 ROTATION_VECTORS_FILE = VALUES_FOLDER + 'rotationVectors' + FILE_EXTENSION
 TRANSLATION_VECTORS_FILE = VALUES_FOLDER + 'translationVectors' + FILE_EXTENSION
 REPROJECTION_ERROR_FILE = VALUES_FOLDER + 'reprojectionError' + FILE_EXTENSION
+
+
+
+# global variables
+routePoints = []
+centimeterToPixelRatio = 0.
+measuringMarkerInsideLimits = False
