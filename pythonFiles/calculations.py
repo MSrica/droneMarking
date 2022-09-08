@@ -3,7 +3,12 @@
 @author: srica
 """
 
+import math
+
 import constants
+
+def getDistanceBetweenTwoPoints(p0, p1):
+	return math.sqrt((p0[0] - p1[0])**2 + (p0[1] - p1[1])**2)
 
 def getMarkerCoordinates(aCorner):
     topLeft, topRight, bottomRight, bottomLeft = aCorner
