@@ -11,9 +11,25 @@ import numpy as np
 import constants
 import calculations
 
+# mouse callback function
+def mouse_callback(event, x, y, flags, param):
+    if event == cv.EVENT_LBUTTONDBLCLK:
+        if constants.measuringMarkerInsideLimits == False: return
+        elif len(constants.routePoints) == 0:
+            constants.routePoints.append([(int(x/constants.SHRINK), int(y/constants.SHRINK))])
+        elif calculations.getDistanceBetweenTwoPoints(constants.routePoints[-1][0], [x/constants.SHRINK, y/constants.SHRINK]) * constants.centimeterToPixelRatio >= constants.TELLO_MINIMUM_DISTANCE: 
+            constants.routePoints.append([(int(x/constants.SHRINK), int(y/constants.SHRINK))])
+        else:
+            print(f'Distance between points shorter than {constants.TELLO_MINIMUM_DISTANCE} cm')
+    elif event == cv.EVENT_RBUTTONDBLCLK:
+        if len(constants.routePoints) == 0: return
+        constants.routePoints.pop()
+
 # opening communication with camera
 def communicateWithCamera():
     cap = cv.VideoCapture(constants.CAMERA_SOURCE)
+    cv.namedWindow('Marker detection')
+    cv.setMouseCallback('Marker detection', mouse_callback)
     if not cap.isOpened():
         print("Cannot open camera")
         return cap, False
@@ -38,16 +54,24 @@ def drawCenterMeasuringCircle(frame):
 
 # showing window and checking for exit
 def showWindow(frame, followingPoints):
-    if len(followingPoints) > 0:
-        frame = drawFollowingPoints(frame, followingPoints)
+    #if len(followingPoints) > 0: frame = drawFollowingPoints(frame, followingPoints)
+    
+    if len(constants.routePoints) > 0:
+        frame = drawRoutePoints(frame, constants.routePoints)
 
     frameSmall = cv.resize(frame, (0, 0), fx=constants.SHRINK, fy=constants.SHRINK)
     cv.imshow('Marker detection', frameSmall)
+    wait = cv.waitKey(10)
 
-    if cv.waitKey(10) == ord('q'):
+    if wait == ord('q'):
         return False
+    elif wait == ord('a'):
+        idk()
 
     return True
+
+def idk():
+    print('sex')
 
 # drawing marker center and axes
 def drawMarker(image, id, aMarker, cameraMatrix, cameraDistortionCoefficients, rotationVector, translationVector, corners):   
@@ -73,4 +97,12 @@ def drawFollowingPoints(frame, followingPoints):
     formatedFollowingPoints = formatedFollowingPoints.reshape((-1, 1, 2))
     return cv.polylines(frame, [formatedFollowingPoints], constants.CLOSED_CIRCUIT, constants.WHITE, constants.LINE_WIDTH)
 
-    #return cv.drawContours(frame, [np.array(followingPoints)], 0, (255,255,255), 2)
+    #return cv.drawContours(frame, [np.array(followingPoints)], constants.CLOSED_CIRCUIT, constants.WHITE, constants.LINE_WIDTH)
+
+def drawRoutePoints(frame, routePoints):
+    formatedRoutePoints = np.array(routePoints)
+    formatedRoutePoints = formatedRoutePoints.reshape((-1, 1, 2))
+    for point in formatedRoutePoints:
+        cv.circle(frame, (point[0][0], point[0][1]), constants.CIRCLE_RADIUS, constants.RED, constants.CIRCLE_WIDTH)
+
+    return cv.polylines(frame, [formatedRoutePoints], constants.CLOSED_CIRCUIT, constants.WHITE, constants.LINE_WIDTH)
