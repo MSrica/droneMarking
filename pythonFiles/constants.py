@@ -18,12 +18,14 @@ import random
 #CAMERA_CAPTURE_FPS = 15 			# 30
 #WINDOW_WIDTH = 800
 
-#CAMERA_SOURCE = 0
-CAMERA_SOURCE = 'http://192.168.5.13:8080/video'
+#CAMERA_SOURCE = 0  
+CAMERA_SOURCE = 1
+#CAMERA_SOURCE = 'http://192.168.5.13:8080/video'
+#CAMERA_SOURCE = 'http://192.168.10.3:4747/video'
 
 # marker types, lengths and values
 ARUCO_TYPE = cv2.aruco.DICT_4X4_1000
-MARKER_SIDE_LENGTH = 0.03 # CM
+MARKER_SIDE_LENGTH = 0.03 # cm
 MARKER_DIAGONAL_LENGTH = math.sqrt((MARKER_SIDE_LENGTH ** 2) * 2) * 100
 MARKER_ORIENTATION_LENGTH = MARKER_SIDE_LENGTH / 2
 TELLO_MINIMUM_DISTANCE = 20 # cm
@@ -48,8 +50,8 @@ BLUE = (255, 0, 0)
 WHITE = (255, 255, 255)
 
 # directory settings
-#CURRENT_DIRECTORY = os.path.dirname(os.getcwd())
-CURRENT_DIRECTORY = os.getcwd()
+CURRENT_DIRECTORY = os.path.dirname(os.getcwd())
+#CURRENT_DIRECTORY = os.getcwd()
 DEVICE_NAME = 'A52S'
 SAMPLE_IMAGES = CURRENT_DIRECTORY + '\\samples\\' + DEVICE_NAME + '\\'
 NR_OF_IMAGES = random.randint(1, 19)
