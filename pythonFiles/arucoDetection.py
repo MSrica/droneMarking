@@ -82,8 +82,8 @@ def mainLoop():
 
 if __name__ == '__main__':
     ret = True
-    if input('Type y for calibration ') == 'y':
-        ret = cameraCalibration.mainLoop()
+    #if input('Type y for calibration ') == 'y':
+    #    ret = cameraCalibration.mainLoop()
     if not ret: exit
 
     ret = mainLoop()

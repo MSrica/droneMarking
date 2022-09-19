@@ -10,8 +10,8 @@ import math
 import glob
 import random
 
-CAMERA_SOURCE = 0
-#CAMERA_SOURCE = 'http://192.168.5.20:8080/video'
+#CAMERA_SOURCE = 0
+CAMERA_SOURCE = 'http://192.168.5.20:8080/video'
 
 # marker types, lengths and values
 ARUCO_TYPE = cv2.aruco.DICT_4X4_1000
@@ -73,5 +73,6 @@ REPROJECTION_ERROR_FILE = VALUES_FOLDER + 'reprojectionError' + FILE_EXTENSION
 # global variables
 dronePoints = []
 routePoints = []
+markerPoints = []
 centimeterToPixelRatio = 0.
 measuringMarkerInsideLimits = False
