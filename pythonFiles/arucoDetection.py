@@ -4,8 +4,11 @@
 @author: srica
 """
 
+# draw drone and orientation (line)
+
 # libraries
 import cv2 as cv
+import numpy as np
 
 # files
 import constants
@@ -49,6 +52,8 @@ def mainLoop():
         
         # passing trough all markers
         for (markerCorner, id, rotationVector, translationVector) in zippedSorted:
+            #print(rotationVector[0])
+            #print(cv.Rodrigues(rotationVector))
             if id != constants.MEASURING_MARKER_ID:# and not measuringMarkerInsideLimits: continue
                 continue
 

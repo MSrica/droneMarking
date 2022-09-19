@@ -18,9 +18,9 @@ import random
 #CAMERA_CAPTURE_FPS = 15 			# 30
 #WINDOW_WIDTH = 800
 
-#CAMERA_SOURCE = 0  
-CAMERA_SOURCE = 1
-#CAMERA_SOURCE = 'http://192.168.5.13:8080/video'
+CAMERA_SOURCE = 0  
+#CAMERA_SOURCE = 1
+#CAMERA_SOURCE = 'http://192.168.5.20:8080/video'
 #CAMERA_SOURCE = 'http://192.168.10.3:4747/video'
 
 # marker types, lengths and values
@@ -35,7 +35,7 @@ CLOSED_CIRCUIT = True
 PIXEL_DIFFERENCE = 5
 
 # drawing values
-SHRINK = 0.5
+SHRINK = 1
 LINE_WIDTH = 2
 CIRCLE_WIDTH = -1
 CIRCLE_RADIUS = 4
@@ -64,9 +64,6 @@ NX = 6
 NY = 8
 SQUARE_SIZE = 0.03
 
-# shrink image coefficient 
-SHRINK = 0.5
-
 # directory of images
 IMAGES = glob.glob(SAMPLE_IMAGES + '*.jpg')
 EXAMPLE_IMAGE = SAMPLE_IMAGES + str(NR_OF_IMAGES) + '.jpg'
@@ -84,6 +81,9 @@ REPROJECTION_ERROR_FILE = VALUES_FOLDER + 'reprojectionError' + FILE_EXTENSION
 
 
 # global variables
+dronePoints = []
 routePoints = []
 centimeterToPixelRatio = 0.
 measuringMarkerInsideLimits = False
+
+MINIMUM_DISTANCE_POINT = 2
