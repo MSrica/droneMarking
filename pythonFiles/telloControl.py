@@ -16,13 +16,13 @@ tello.connect()
 tello.takeoff()
 time.sleep(2)
 
-tello.move_forward(50)
-time.sleep(2)
+tello.move_forward(20)
+time.sleep(2)   
 
 tello.rotate_clockwise(180)
 time.sleep(2)
 
-tello.move_forward(50)
+tello.move_forward(20)
 time.sleep(2)
 
 tello.land()

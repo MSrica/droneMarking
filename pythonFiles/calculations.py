@@ -40,6 +40,7 @@ def checkMeasuringMarkerPosition(frame, center):
     circleCenterX, circleCenterY, radius = getWindowCenterCircleCoordinates(frame)
     if (circleCenterX < center[0] + radius and circleCenterX > center[0] - radius) and (circleCenterY < center[1] + radius and circleCenterY > center[1] - radius): 
         return True
+        
     return False
 
 def sortMarkers(aCorner, ids, rotationVectors, translationVectors):

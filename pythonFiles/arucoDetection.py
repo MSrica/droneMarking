@@ -4,8 +4,6 @@
 @author: srica
 """
 
-# draw drone and orientation (line)
-
 # libraries
 import cv2 as cv
 import numpy as np
@@ -52,10 +50,7 @@ def mainLoop():
         
         # passing trough all markers
         for (markerCorner, id, rotationVector, translationVector) in zippedSorted:
-            #print(rotationVector[0])
-            #print(cv.Rodrigues(rotationVector))
-            if id != constants.MEASURING_MARKER_ID:# and not measuringMarkerInsideLimits: continue
-                continue
+            if id != constants.MEASURING_MARKER_ID: continue # and not measuringMarkerInsideLimits: continue
 
             # getting all coordinates of a marker - topLeft, topRight, bottomRight, bottomLeft, centerX, centerY
             aCorner = markerCorner.reshape((4, 2))
@@ -73,8 +68,8 @@ def mainLoop():
                 constants.centimeterToPixelRatio = constants.MARKER_DIAGONAL_LENGTH / calibrationMarkerDiagonalPixels
 
             if id == 0 and (len(followingPoints) == 0 or (abs(aMarker[4][0] - followingPoints[-1][0][0]) > constants.PIXEL_DIFFERENCE or abs(aMarker[4][1] - followingPoints[-1][0][1]) > constants.PIXEL_DIFFERENCE)):
-                followingPoints.append([aMarker[4]]) # polylines
                 #followingPoints.append((aMarker[4], aMarker[5])) # contours
+                followingPoints.append([aMarker[4]]) # polylines
 
         # showing screen and checking for looping conditional
         looping = opencvFunctions.showWindow(frame, followingPoints)
@@ -87,8 +82,8 @@ def mainLoop():
 
 if __name__ == '__main__':
     ret = True
-    #if input('Type y for calibration ') == 'y':
-    #    ret = cameraCalibration.mainLoop()
+    if input('Type y for calibration ') == 'y':
+        ret = cameraCalibration.mainLoop()
     if not ret: exit
 
     ret = mainLoop()

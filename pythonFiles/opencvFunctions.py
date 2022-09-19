@@ -5,8 +5,6 @@
 
 # libraries
 import math
-import time
-import threading
 import cv2 as cv
 import numpy as np
 
@@ -119,24 +117,30 @@ def drawDronePoints(frame):
     formatedDronePoints = np.array(constants.dronePoints)
     formatedDronePoints = formatedDronePoints.reshape((-1, 1, 2))
     cv.circle(frame, (formatedDronePoints[0][0][0], formatedDronePoints[0][0][1]), constants.CIRCLE_RADIUS, constants.BLUE, constants.CIRCLE_WIDTH)
-    if len(formatedDronePoints) == 2:
+    if len(formatedDronePoints) >= 2:
         cv.line(frame, (formatedDronePoints[0][0][0], formatedDronePoints[0][0][1]), (formatedDronePoints[1][0][0], formatedDronePoints[1][0][1]), constants.BLUE, constants.LINE_WIDTH)
         cv.circle(frame, (formatedDronePoints[1][0][0], formatedDronePoints[1][0][1]), constants.CIRCLE_RADIUS, constants.BLUE, constants.CIRCLE_WIDTH)
-    if len(formatedDronePoints) >= 3:
-        cv.line(frame, (formatedDronePoints[0][0][0], formatedDronePoints[0][0][1]), (formatedDronePoints[1][0][0], formatedDronePoints[1][0][1]), constants.BLUE, constants.LINE_WIDTH)
-        cv.line(frame, (formatedDronePoints[0][0][0], formatedDronePoints[0][0][1]), (formatedDronePoints[2][0][0], formatedDronePoints[2][0][1]), constants.BLUE, constants.LINE_WIDTH)
-        cv.circle(frame, (formatedDronePoints[1][0][0], formatedDronePoints[1][0][1]), constants.CIRCLE_RADIUS, constants.BLUE, constants.CIRCLE_WIDTH)
-        
-        angle = 0
-        radius = int(calculations.getDistanceBetweenTwoPoints([constants.dronePoints[1][0][0], constants.dronePoints[1][0][1]], [constants.dronePoints[0][0][0], constants.dronePoints[0][0][1]]))
-        axesLength = (radius, radius)
-        endAngle = 180*np.arctan2(constants.dronePoints[1][0][1] - constants.dronePoints[0][0][1], constants.dronePoints[1][0][0] - constants.dronePoints[0][0][0])/np.pi
-        startAngle = 180*np.arctan2(constants.dronePoints[2][0][1] - constants.dronePoints[0][0][1], constants.dronePoints[2][0][0] - constants.dronePoints[0][0][0])/np.pi 
-        
-        cv.ellipse(frame, (constants.dronePoints[0][0][0], constants.dronePoints[0][0][1]), axesLength, angle, startAngle, endAngle, constants.BLUE, constants.LINE_WIDTH)
+        if len(formatedDronePoints) >= 3:
+            cv.line(frame, (formatedDronePoints[0][0][0], formatedDronePoints[0][0][1]), (formatedDronePoints[2][0][0], formatedDronePoints[2][0][1]), constants.BLUE, constants.LINE_WIDTH)
+            
+            angle = 0
+            radius = int(calculations.getDistanceBetweenTwoPoints([constants.dronePoints[1][0][0], constants.dronePoints[1][0][1]], [constants.dronePoints[0][0][0], constants.dronePoints[0][0][1]]))
+            axesLength = (radius, radius)
+            startAngle = 180 * np.arctan2(constants.dronePoints[1][0][1] - constants.dronePoints[0][0][1], constants.dronePoints[1][0][0] - constants.dronePoints[0][0][0]) / np.pi
+            endAngle = 180 * np.arctan2(constants.dronePoints[2][0][1] - constants.dronePoints[0][0][1], constants.dronePoints[2][0][0] - constants.dronePoints[0][0][0]) / np.pi 
+            
+            if startAngle < 0: startAngle += 360
+            if endAngle < 0: endAngle += 360
 
-        if len(formatedDronePoints) >= 4:
-            cv.circle(frame, (formatedDronePoints[3][0][0], formatedDronePoints[3][0][1]), constants.CIRCLE_RADIUS, constants.RED, constants.CIRCLE_WIDTH)
+            if(startAngle-endAngle > endAngle-startAngle):
+                tmp = startAngle
+                startAngle = endAngle
+                endAngle = tmp
+
+            cv.ellipse(frame, (constants.dronePoints[0][0][0], constants.dronePoints[0][0][1]), axesLength, angle, startAngle, endAngle, constants.BLUE, constants.LINE_WIDTH)
+
+            if len(formatedDronePoints) >= 4:
+                cv.circle(frame, (formatedDronePoints[3][0][0], formatedDronePoints[3][0][1]), constants.CIRCLE_RADIUS, constants.RED, constants.CIRCLE_WIDTH)
 
     return frame
 
@@ -177,7 +181,9 @@ def showNext():
             constants.dronePoints.append(closestPoint)
 
     ang = math.degrees(math.atan2(constants.dronePoints[2][0][1]-constants.dronePoints[0][0][1], constants.dronePoints[2][0][0]-constants.dronePoints[0][0][1]) - math.atan2(constants.dronePoints[1][0][1]-constants.dronePoints[0][0][1], constants.dronePoints[1][0][0]-constants.dronePoints[0][0][0]))
-    
+    if ang < 0: 
+        ang += 360
+
     lineVector = [constants.dronePoints[2][0][0] - constants.dronePoints[0][0][0], constants.dronePoints[2][0][1] - constants.dronePoints[0][0][1]]
     lineLength = math.sqrt(lineVector[0]*lineVector[0] + lineVector[1]*lineVector[1])
     lineVector[0] = lineVector[0] / lineLength

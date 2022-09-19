@@ -22,7 +22,8 @@ def mainLoop():
     if not ret: return False
 
     savingToFile.saveToFiles(mtx, dist, rvecs, tvecs, reprojectionError)
-    print("Successfully calibrated and saved camera values")
+    print('Successfully calibrated and saved camera values')
+    print(f'Reprojection error: {reprojectionError:.3f}')
     return True
     
     

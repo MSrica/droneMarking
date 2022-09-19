@@ -12,7 +12,6 @@ import constants
 def getPoints():
     objpoints, imgpoints = ([] for _ in range(2))
 
-    # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0) * SQUARE SIZE
     objp = np.zeros((constants.NX*constants.NY, 3), np.float32)
     objp[:, :2] = np.mgrid[0:constants.NX, 0:constants.NY].T.reshape(-1, 2)
     objp = objp * constants.SQUARE_SIZE
@@ -21,21 +20,17 @@ def getPoints():
         img = cv.imread(imgName)
         gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     
-        # find the chess board corners
         #ret, corners = cv.findChessboardCorners(gray, (constants.NX, constants.NY), cv.CALIB_CB_ADAPTIVE_THRESH + cv.CALIB_CB_FAST_CHECK + cv.CALIB_CB_NORMALIZE_IMAGE)
         ret, corners = cv.findChessboardCorners(gray, (constants.NX, constants.NY), None)
         if not ret:
             print("No pattern found on " + imgName)
             continue
 
-        # TODO testing for accuracy
-        # if found add object and image points
         cornersBetter = cv.cornerSubPix(gray, corners, (20, 20),(-1, -1), constants.CRITERIA)
         #cornersBetter = cv.cornerSubPix(gray, corners, (11, 11),(-1, -1), constants.CRITERIA)
         objpoints.append(objp)
         imgpoints.append(cornersBetter)
         
-        # draw the corners and show image
         """cv.drawChessboardCorners(img, (constants.NX, constants.NY), cornersBetter, ret)
         imgShow = cv.resize(img, (0, 0), fx = constants.SHRINK, fy = constants.SHRINK)
         cv.imshow(imgName, imgShow)
@@ -49,12 +44,11 @@ def getPoints():
 
     return ret, objpoints, imgpoints
 
-def getCameraValues(objpoints, imgpoints):  
+def getCameraValues(objpoints, imgpoints):
     reprojectionError = 0 
     img = cv.imread(constants.EXAMPLE_IMAGE)
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     
-    # get camera intrinsic and extrinsic parameters
     ret, oldMtx, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
     if not ret:
         print("Camera calibration not successful")
